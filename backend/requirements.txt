@@ -2,5 +2,5 @@ fastapi==0.115.8
 uvicorn[standard]==0.34.0
 sqlalchemy==2.0.38
 pydantic[email]==2.10.6
-python-multipart==0.0.20
+python-multipart==0.0.22
 aiofiles==24.1.0
