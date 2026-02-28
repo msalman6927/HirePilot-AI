@@ -5,6 +5,14 @@
 
 ---
 
+## LAST WORKING SESSION
+Date: 2026-03-02
+Last completed task: TASK-021 (Apply Agent + HITL Gate wired into orchestrator)
+Last completed file: backend/agents/apply_agent.py, backend/routers/apply_router.py
+Server status: running on localhost:8000
+Next task: TASK-022 (Frontend API Service Layer) — Phase 4
+Blocker: None
+
 ## 1. Project Overview (For Copilot)
 
 You are helping build **HirePilot-AI** — a locally-deployed, single-user AI agent system that automates the entire job acquisition process for one person. It is not a SaaS product. It is a personal command center.
@@ -17,7 +25,7 @@ The frontend is a React application with a dark "command center" aesthetic (dark
 
 ## 2. Technology Stack (Do Not Change These)
 
-The backend uses Python with FastAPI as the web framework and LangGraph for the multi-agent orchestration graph. The LLM is Google Gemini 1.5 Flash accessed via the `langchain-google-genai` package. Observability uses Langfuse with both the `CallbackHandler` for automatic LLM tracing and the `@observe` decorator for agent-level spans. The database is SQLite accessed via SQLAlchemy ORM. Job scraping uses the Apify Python client (`apify-client`). Email sending uses the Gmail API via `google-api-python-client`. PDF extraction uses PyMuPDF (`fitz`). DOCX extraction uses `python-docx`.
+The backend uses Python with FastAPI as the web framework and LangGraph for the multi-agent orchestration graph. The LLM is Google Gemini 2.5 Flash (updated from 1.5 due to availability) accessed via the `langchain-google-genai` package. Observability uses Langfuse with both the `CallbackHandler` for automatic LLM tracing and the `@observe` decorator for agent-level spans. The database is SQLite accessed via SQLAlchemy ORM. Job scraping uses the Apify Python client (`apify-client`). Email sending uses the Gmail API via `google-api-python-client`. PDF extraction uses PyMuPDF (`fitz`). DOCX extraction uses `python-docx`.
 
 The frontend uses React 18 with Vite as the build tool, Tailwind CSS for styling, Zustand for global state management, and Axios for API calls.
 
@@ -111,32 +119,47 @@ Phase 6 (if time permits) is the interview prep agent. Estimated time: 30 minute
 
 ## 9. Current Implementation State
 
-**Update this section every time you complete a task.**
+### Phase 0: Scaffolding
+- [x] TASK-001: Project folder structure created
+- [x] TASK-002: Environment variables (.env) configured
+- [x] TASK-003: LLM client setup & key verification
+- [x] TASK-004: Create config.py (Backend Configuration)
 
-As of the creation of this documentation file (2026-02-28), nothing has been implemented yet. The markdown documentation files are the only deliverables. Implementation has not started.
+### Phase 1: Backend Foundation
+- [x] TASK-005: Database models & engine
+- [x] TASK-006: Gemini LLM factory with Langfuse
+- [x] TASK-007: Basic Orchestrator & FastAPI app
 
-```
-PHASE 0 - SCAFFOLDING:         [ 0 tasks are complete. The implementation has not started, and the first step is Phase 0 - Scaffolding (TASK-001).] 
-PHASE 1 - BACKEND FOUNDATION:  [ ] Not started
-  ├── config.py                 [ ]
-  ├── database.py + models      [ ]
-  ├── gemini_llm.py             [ ]
-  ├── main.py                   [ ]
-  └── orchestrator.py (empty)   [ ]
+### Phase 2: CV + Job Search
+- [x] TASK-008: Port BowJob CV Schema
+- [x] TASK-009: CV Parser Agent
+- [x] TASK-010: CV Upload Endpoint
+- [x] TASK-011: Create HirePilotState and Orchestrator Graph
+- [x] TASK-012: Wire Chat Endpoint to Orchestrator
+- [x] TASK-013: Create Apify Tool
+- [x] TASK-014: Job Search Agent (Real)
 
-PHASE 2 - CV + JOB SEARCH:     [ ] Not started
-  ├── _cv_schema.py (BowJob)    [ ]
-  ├── cv_parser_agent.py        [ ]
-  ├── CV upload endpoint        [ ]
-  ├── apify_tool.py             [ ]
-  └── job_search_agent.py       [ ]
+PHASE 2 - CV + JOB SEARCH:     [x]  COMPLETE
+  ├── _cv_schema.py (BowJob)    [x]
+  ├── cv_parser_agent.py        [x]
+  ├── CV upload endpoint        [x]
+  ├── orchestrator.py (Graph)   [x]
+  ├── apify_tool.py             [x]
+  └── job_search_agent.py       [x]
 
-PHASE 3 - TAILOR + HITL:       [ ] Not started
-  ├── _cv_improvement_schema.py [ ]
-  ├── cv_tailoring_agent.py     [ ]
-  ├── hitl_gate_node            [ ]
-  ├── gmail_tool.py             [ ]
-  └── apply_agent.py            [ ]
+PHASE 3 - TAILOR + HITL:       [x]  COMPLETE
+  ├── _cv_improvement_schema.py [x]  BowJob schemas ported verbatim
+  ├── cv_tailoring_agent.py     [x]  Full BowJob engine (score, analyze, guardrail, field_paths)
+  ├── hitl_gate_node            [x]  HITL gate in apply_agent.py (Rule 6 enforced)
+  ├── gmail_tool.py             [x]  Gmail API send_email()
+  └── apply_agent.py            [x]  HITL gate + apply node + email draft gen
+
+PHASE 3 TASKS:
+- [x] TASK-017: Port BowJob CV Improvement Schema
+- [x] TASK-018: Create CV Tailoring Agent
+- [x] TASK-019: Create Apply Router with HITL Endpoints
+- [x] TASK-020: Create Gmail Tool
+- [x] TASK-021: Apply Agent + HITL Gate
 
 PHASE 4 - FRONTEND:            [ ] Not started
   ├── api.js (service layer)    [ ]
