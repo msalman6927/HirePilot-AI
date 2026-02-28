@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+/* ── HirePilot-AI Command Center Theme ────────────────────── */
+:root {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #111827;
+  --bg-card: #1a1f35;
+  --bg-card-hover: #1f2747;
+  --border-color: #1e293b;
+  --border-accent: #3b82f6;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --neon-blue: #3b82f6;
+  --neon-cyan: #06b6d4;
+  --neon-green: #10b981;
+  --neon-purple: #8b5cf6;
+  --neon-amber: #f59e0b;
+  --neon-red: #ef4444;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1e293b #0a0e1a;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+/* ── Glow Effects ─────────────────────────────────────────── */
+.glow-blue { box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+.glow-green { box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+.glow-cyan { box-shadow: 0 0 15px rgba(6, 182, 212, 0.3); }
+.glow-purple { box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); }
+
+/* ── Animated gradient border ─────────────────────────────── */
+.gradient-border {
+  position: relative;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--neon-blue), var(--neon-cyan), var(--neon-green));
+  z-index: -1;
+  opacity: 0.5;
+}
+
+/* ── Match Score Ring ─────────────────────────────────────── */
+.match-ring {
+  background: conic-gradient(
+    var(--neon-green) calc(var(--score) * 1%),
+    #1e293b calc(var(--score) * 1%)
+  );
+}
+
+/* ── Pulse animation for running agents ───────────────────── */
+@keyframes pulse-neon {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.animate-pulse-neon {
+  animation: pulse-neon 2s ease-in-out infinite;
+}
+
+/* ── Chat message styles ──────────────────────────────────── */
+.chat-user {
+  background: linear-gradient(135deg, #1e3a5f, #1a2744);
+  border-left: 3px solid var(--neon-blue);
+}
+.chat-ai {
+  background: linear-gradient(135deg, #1a2f3a, #152028);
+  border-left: 3px solid var(--neon-cyan);
+}
