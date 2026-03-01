@@ -4,6 +4,7 @@ import CVUpload from './pages/CVUpload';
 import Chatbot from './pages/Chatbot';
 import JobMatching from './pages/JobMatching';
 import ApplicationPrep from './pages/ApplicationPrep';
+import InterviewPrep from './pages/InterviewPrep';
 import Dashboard from './pages/Dashboard';
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/chat" element={<Chatbot />} />
           <Route path="/jobs" element={<JobMatching />} />
           <Route path="/apply" element={<ApplicationPrep />} />
+          <Route path="/interview-prep" element={<InterviewPrep />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </main>

@@ -3,6 +3,7 @@ import { Send, Loader2, Bot, User, Briefcase, Zap } from 'lucide-react';
 import useAppStore from '../store/appStore';
 import { sendMessage } from '../services/api';
 import ReactMarkdown from 'react-markdown';
+import EmailApprovalCard from '../components/EmailApprovalCard';
 
 export default function Chatbot() {
   const {
@@ -35,10 +36,11 @@ export default function Chatbot() {
         content: res.response || 'No response from agent.',
         intent: res.detected_intent,
         logs: res.agent_logs,
+        email_draft: res.email_draft || null,
       });
       // If jobs came back from the agent, save them
-      if (res.jobs && res.jobs.length > 0) {
-        setJobs(res.jobs);
+      if (res.found_jobs && res.found_jobs.length > 0) {
+        setJobs(res.found_jobs);
       }
     } catch (err) {
       addChatMessage({
@@ -123,6 +125,20 @@ export default function Chatbot() {
                   <div className="mt-2 flex items-center gap-1.5">
                     <Briefcase className="w-3 h-3 text-blue-400" />
                     <span className="text-xs text-blue-400">Intent: {msg.intent}</span>
+                  </div>
+                )}
+                {msg.email_draft && (
+                  <div className="mt-3">
+                    <EmailApprovalCard
+                      emailDraft={msg.email_draft}
+                      sessionId={sessionId}
+                      onResult={(r) => {
+                        addChatMessage({
+                          role: 'assistant',
+                          content: r.message || `Application ${r.status}.`,
+                        });
+                      }}
+                    />
                   </div>
                 )}
               </div>

@@ -4,6 +4,7 @@ import {
   MessageSquare,
   Briefcase,
   FileCheck,
+  GraduationCap,
   LayoutDashboard,
   Zap,
 } from 'lucide-react';
@@ -13,6 +14,7 @@ const links = [
   { to: '/chat', icon: MessageSquare, label: 'AI Chat' },
   { to: '/jobs', icon: Briefcase, label: 'Jobs' },
   { to: '/apply', icon: FileCheck, label: 'Apply' },
+  { to: '/interview-prep', icon: GraduationCap, label: 'Interview Prep' },
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
 ];
 

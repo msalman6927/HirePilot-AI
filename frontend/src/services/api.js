@@ -62,6 +62,12 @@ export async function approveApplication(sessionId, editedEmailDraft, approved =
   return data;
 }
 
+// ── Interview Prep ────────────────────────────────────────────
+export async function getInterviewPrep(jobId) {
+  const { data } = await api.get(`/prep/${jobId}`, { timeout: 120000 });
+  return data;
+}
+
 // ── Dashboard ─────────────────────────────────────────────────
 export async function getDashboardCVVersions() {
   const { data } = await api.get('/dashboard/cv-versions');
