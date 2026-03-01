@@ -28,6 +28,9 @@ class HirePilotState(TypedDict):
     hitl_approved: bool
     feedback_comments: Optional[str]
     
+    # Interview Prep
+    interview_prep: Optional[Dict[str, Any]]  # Generated Q&A, skill gaps, resources
+
     # Execution & Routing
     detected_intent: str
     agents_to_activate: List[str]

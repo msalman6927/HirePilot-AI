@@ -13,6 +13,7 @@ from backend.agents.cv_parser_agent import cv_parser_node
 from backend.agents.job_search_agent import job_search_node
 from backend.agents.cv_tailoring_agent import cv_tailoring_node
 from backend.agents.apply_agent import hitl_gate_node, apply_node
+from backend.agents.interview_prep_agent import interview_prep_node
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -91,11 +92,7 @@ def route_by_intent(state: HirePilotState) -> str:
 
 # --- 3. AGENTS (Mock & Real) ---
 
-@observe(name="InterviewPrepAgent")
-def interview_prep_node(state: HirePilotState) -> HirePilotState:
-    logger.info("AGENT: Interview Prep (Mock)")
-    state.setdefault("agent_logs", []).append({"agent": "InterviewPrep", "message": "Exec mock prep"})
-    return state
+# interview_prep_node is now imported from backend.agents.interview_prep_agent
 
 @observe(name="GeneralResponder")
 def general_responder_node(state: HirePilotState) -> HirePilotState:
@@ -158,7 +155,23 @@ def responder_node(state: HirePilotState) -> HirePilotState:
          state["final_response"] = "I have drafted an application email for you. Please approve it to send."
 
     elif intent == "interview_prep_agent":
-         state["final_response"] = "Here are some interview questions to help you prepare..."
+        prep = state.get("interview_prep")
+        if prep:
+            tech_count = len(prep.get("technical_questions", []))
+            behav_count = len(prep.get("behavioral_questions", []))
+            gaps_count = len(prep.get("skill_gaps", []))
+            state["final_response"] = (
+                f"I've prepared comprehensive interview material for **{prep.get('job_title', 'the role')}** at **{prep.get('company', 'the company')}**:\n\n"
+                f"- {tech_count} Technical Questions (with model answers)\n"
+                f"- {behav_count} Behavioral Questions (STAR method)\n"
+                f"- {gaps_count} Skill Gaps identified (with learning resources)\n"
+                f"- Company Research notes\n"
+                f"- Salary Guidance\n"
+                f"- Day One Tips\n\n"
+                f"View the full prep material on the **Interview Prep** page."
+            )
+        else:
+            state["final_response"] = "I couldn't generate interview prep. Please make sure you have a CV uploaded and a job selected."
          
     else:
          if not state.get("final_response"):

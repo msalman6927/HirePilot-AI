@@ -8,6 +8,8 @@ from typing import Optional, Dict, Any, List
 # Import the compiled graph (agent_graph)
 from backend.agents.orchestrator import agent_graph
 from backend.agents.state import HirePilotState
+from backend.database import SessionLocal
+from backend.models.agent_log import AgentLog
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -26,6 +28,8 @@ class ChatResponse(BaseModel):
     thread_id: str
     detected_intent: Optional[str] = None
     agent_logs: Optional[List[dict]] = None
+    found_jobs: Optional[List[dict]] = None
+    email_draft: Optional[str] = None
 
 @router.post("/", response_model=ChatResponse)
 async def analyze_and_chat(request: ChatRequest):
@@ -64,12 +68,30 @@ async def analyze_and_chat(request: ChatRequest):
         detected_intent = final_state.get("detected_intent", "unknown")
         # Ensure agent_logs is a list of dicts, it might be a list of strings if legacy code remains
         agent_logs = final_state.get("agent_logs", [])
-        
+
+        # 4. Persist agent_logs to SQLite for Dashboard Activity Feed
+        try:
+            db = SessionLocal()
+            for log_entry in agent_logs:
+                db_log = AgentLog(
+                    session_id=request.thread_id,
+                    agent_name=log_entry.get("agent", log_entry.get("agent_name", "Unknown")),
+                    action=log_entry.get("action", log_entry.get("message", "")),
+                    status=log_entry.get("status", "completed"),
+                )
+                db.add(db_log)
+            db.commit()
+            db.close()
+        except Exception as log_err:
+            logger.warning(f"Failed to persist agent logs: {log_err}")
+
         return ChatResponse(
             response=response_text,
             thread_id=request.thread_id,
             detected_intent=detected_intent,
-            agent_logs=agent_logs
+            agent_logs=agent_logs,
+            found_jobs=final_state.get("found_jobs"),
+            email_draft=final_state.get("tailored_email_draft"),
         )
         
     except Exception as e:

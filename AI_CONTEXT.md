@@ -1,17 +1,17 @@
 # AI_CONTEXT.md
 # HirePilot-AI — AI Development Context File
 **Purpose:** This file exists so GitHub Copilot can understand the entire project state at any point in time and continue development without losing context. Read this file first before touching any code.
-**Version:** 1.0.0 | **Last Updated:** 2026-02-28
+**Version:** 1.0.0 | **Last Updated:** 2026-03-01
 
 ---
 
 ## LAST WORKING SESSION
-Date: 2026-03-02
-Last completed task: TASK-021 (Apply Agent + HITL Gate wired into orchestrator)
-Last completed file: backend/agents/apply_agent.py, backend/routers/apply_router.py
-Server status: running on localhost:8000
-Next task: TASK-022 (Frontend API Service Layer) — Phase 4
-Blocker: None
+Date: 2026-03-01
+Last completed task: Phase 6 (Interview Prep Agent) — full implementation
+Last completed files: backend/agents/interview_prep_agent.py (new), backend/routers/prep_router.py (real), backend/agents/state.py (added interview_prep), backend/agents/orchestrator.py (real agent import + responder), backend/main.py (prep_router mounted), frontend/src/pages/InterviewPrep.jsx (new), frontend/src/App.jsx (route), frontend/src/components/Sidebar.jsx (nav), frontend/src/services/api.js (getInterviewPrep)
+Server status: needs restart after Phase 6 changes
+Next task: TASK-025 (End-to-End Demo Test Script) — full verification
+Blocker: Gemini free-tier quota may be rate-limited
 
 ## 1. Project Overview (For Copilot)
 
@@ -161,21 +161,36 @@ PHASE 3 TASKS:
 - [x] TASK-020: Create Gmail Tool
 - [x] TASK-021: Apply Agent + HITL Gate
 
-PHASE 4 - FRONTEND:            [ ] Not started
-  ├── api.js (service layer)    [ ]
-  ├── appStore.js (Zustand)     [ ]
-  ├── CVUpload.jsx wired        [ ]
-  ├── Chatbot.jsx wired         [ ]
-  ├── JobMatching.jsx wired     [ ]
-  ├── ApplicationPrep.jsx wired [ ]
-  └── Dashboard.jsx wired       [ ]
+PHASE 4 - FRONTEND:            [x]  COMPLETE
+  ├── api.js (service layer)    [x]  11 endpoints wired (uploadCV, sendMessage, getJobs, etc.)
+  ├── appStore.js (Zustand)     [x]  sessionId persisted in localStorage
+  ├── CVUpload.jsx wired        [x]  Real upload → parse → store
+  ├── Chatbot.jsx wired         [x]  Real chat + EmailApprovalCard inline
+  ├── JobMatching.jsx wired     [x]  Real jobs with match scores
+  ├── ApplicationPrep.jsx wired [x]  HITL preview + approve/reject
+  └── Dashboard.jsx wired       [x]  4 tabs (CVs, Jobs, Apps, Agent Logs) + 3s polling
 
-PHASE 5 - OBSERVABILITY:       [ ] Not started
-  ├── @observe on all agents    [ ]
-  ├── Langfuse trace verified   [ ]
-  └── Activity Logs tab wired   [ ]
+PHASE 4 TASKS:
+- [x] TASK-022: Create API Service Layer (frontend/src/services/api.js)
+- [x] TASK-023: Create Zustand Store (frontend/src/store/appStore.js)
+- [x] TASK-024: Wire Pages to Backend (all 5 pages + EmailApprovalCard component)
 
-PHASE 6 - INTERVIEW PREP:      [ ] Not started (optional)
+PHASE 5 - OBSERVABILITY:       [x]  COMPLETE
+  ├── @observe on all agents    [x]  12 decorators across all agent files
+  ├── Langfuse trace verified   [x]  CallbackHandler on all LLM calls + @observe spans
+  ├── Activity Logs tab wired   [x]  Dashboard polls /dashboard/logs every 3s
+  └── Agent logs persisted      [x]  chat_router.py saves agent_logs to SQLite after each graph run
+
+PHASE 6 - INTERVIEW PREP:      [x]  COMPLETE
+  ├── interview_prep_agent.py   [x]  Full Gemini prompt (tech Q, behavioral STAR, skill gaps, company research, salary, day-one tips)
+  ├── interview_prep in state   [x]  Optional[Dict[str, Any]] added to HirePilotState
+  ├── orchestrator wired        [x]  Real import replaces mock node, responder shows prep summary
+  ├── prep_router.py            [x]  GET /prep/{job_id} — fetches job+CV from DB, calls Gemini
+  ├── prep_router mounted       [x]  main.py includes prefix=/prep
+  ├── api.js endpoint           [x]  getInterviewPrep(jobId) added
+  ├── InterviewPrep.jsx         [x]  Accordion UI (6 sections) with job selector
+  ├── App.jsx route             [x]  /interview-prep route added
+  └── Sidebar nav               [x]  GraduationCap icon + "Interview Prep" link
 ```
 
 ---
@@ -191,6 +206,10 @@ When you return to this project after a break, look at the implementation state 
 **If you are resuming after Phase 3 is complete:** The full backend pipeline works — upload CV → search jobs → tailor CV → HITL approval → send email. All traces appear in Langfuse. Begin TASK-022 (create frontend API service layer).
 
 **If you are resuming after Phase 4 is complete:** The entire application works through the UI. Begin Phase 5 — add `@observe` decorators to all agents and verify Langfuse traces are complete.
+
+**If you are resuming after Phase 5 is complete:** All agents have `@observe`, Langfuse traces are active, agent logs persist to SQLite, Dashboard polls real data. Run TASK-025 (End-to-End Demo Test Script) to verify all 10 steps pass. Then update this file to mark Phase 5 verified.
+
+**If you are resuming after Phase 6 is complete:** Interview Prep Agent is fully implemented. `GET /prep/{job_id}` generates real AI-powered prep material. Frontend page with accordion cards is wired. All 6 phases are COMPLETE. Run TASK-025 to test end-to-end.
 
 ---
 
